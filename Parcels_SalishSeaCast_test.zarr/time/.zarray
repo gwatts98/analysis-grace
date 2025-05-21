@@ -17,7 +17,7 @@
     "order": "C",
     "shape": [
         1,
-        4
+        23
     ],
     "zarr_format": 2
 }
