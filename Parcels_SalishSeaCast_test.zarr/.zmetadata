@@ -13,7 +13,7 @@
         },
         "lat/.zarray": {
             "chunks": [
-                1,
+                10,
                 1
             ],
             "compressor": {
@@ -29,7 +29,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                1,
+                10,
                 23
             ],
             "zarr_format": 2
@@ -46,7 +46,7 @@
         },
         "lon/.zarray": {
             "chunks": [
-                1,
+                10,
                 1
             ],
             "compressor": {
@@ -62,7 +62,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                1,
+                10,
                 23
             ],
             "zarr_format": 2
@@ -105,7 +105,7 @@
         },
         "time/.zarray": {
             "chunks": [
-                1,
+                10,
                 1
             ],
             "compressor": {
@@ -121,7 +121,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                1,
+                10,
                 23
             ],
             "zarr_format": 2
@@ -139,7 +139,7 @@
         },
         "trajectory/.zarray": {
             "chunks": [
-                1
+                10
             ],
             "compressor": {
                 "blocksize": 0,
@@ -153,7 +153,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                1
+                10
             ],
             "zarr_format": 2
         },
@@ -164,7 +164,7 @@
         },
         "z/.zarray": {
             "chunks": [
-                1,
+                10,
                 1
             ],
             "compressor": {
@@ -180,7 +180,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                1,
+                10,
                 23
             ],
             "zarr_format": 2
