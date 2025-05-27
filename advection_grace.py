@@ -8,6 +8,7 @@ __all__ = [
     "AdvectionAnalytical",
     "AdvectionEE",
     "AdvectionRK4",
+    "AdvectionRK4_gw",
     "AdvectionRK4_3D",
     "AdvectionRK4_3D_CROCO",
     "AdvectionRK45",
@@ -16,6 +17,19 @@ __all__ = [
 
 def AdvectionRK4(particle, fieldset, time):  # pragma: no cover
     """Advection of particles using fourth-order Runge-Kutta integration."""
+    (u1, v1) = fieldset.UV[particle]
+    lon1, lat1 = (particle.lon + u1 * 0.5 * particle.dt, particle.lat + v1 * 0.5 * particle.dt)
+    (u2, v2) = fieldset.UV[time + 0.5 * particle.dt, particle.depth, lat1, lon1, particle]
+    lon2, lat2 = (particle.lon + u2 * 0.5 * particle.dt, particle.lat + v2 * 0.5 * particle.dt)
+    (u3, v3) = fieldset.UV[time + 0.5 * particle.dt, particle.depth, lat2, lon2, particle]
+    lon3, lat3 = (particle.lon + u3 * particle.dt, particle.lat + v3 * particle.dt)
+    (u4, v4) = fieldset.UV[time + particle.dt, particle.depth, lat3, lon3, particle]
+    particle_dlon += (u1 + 2 * u2 + 2 * u3 + u4) / 6.0 * particle.dt  # noqa
+    particle_dlat += (v1 + 2 * v2 + 2 * v3 + v4) / 6.0 * particle.dt  # noqa
+
+def AdvectionRK4_gw(particle, fieldset, time):  # pragma: no cover
+    """Advection of particles using fourth-order Runge-Kutta integration."""
+    particle.depth = particle.depth
     (u1, v1) = fieldset.UV[particle]
     lon1, lat1 = (particle.lon + u1 * 0.5 * particle.dt, particle.lat + v1 * 0.5 * particle.dt)
     (u2, v2) = fieldset.UV[time + 0.5 * particle.dt, particle.depth, lat1, lon1, particle]
