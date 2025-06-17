@@ -118,7 +118,7 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     # field_set.add_constant('tau_bury_constant_lower', tau_bury_crit / (rho * cdmax))
     # field_set.add_constant('tau_bury_constant_upper', tau_bury_crit / (rho * cdmin))
 
-    print (field_set.tau_constant, field_set.tau_bury_constant)
+    # print (field_set.tau_constant, field_set.tau_bury_constant)
 
     return field_set, constants
 
@@ -147,12 +147,15 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
 
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
-      + pset_states.Kernel(Advection)
-      + pset_states.Kernel(turb_mix) + pset_states.Kernel(resuspension) 
-      + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
+    KE = (pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
       + pset_states.Kernel(KeepInOcean)
      )
+    # KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
+    #   + pset_states.Kernel(Advection)
+    #   + pset_states.Kernel(turb_mix) + pset_states.Kernel(resuspension) 
+    #   + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
+    #   + pset_states.Kernel(KeepInOcean)
+    #  )
 
     # Run!
     pset_states.execute(KE, runtime=duration, dt=delta_t, output_file=output_file)
@@ -166,9 +169,9 @@ if __name__ == "__main__":
     day = int(sys.argv[3])
     sim_length = int(sys.argv[4]) 
     number_outputs = int(sys.argv[5])
-    name_extension = str(sys.argv[6])
+    # name_extension = str(sys.argv[6])
     
-    OP_run(year, month, day, sim_length, number_outputs, name_extension)
+    OP_run(year, month, day, sim_length, number_outputs)
     #
     ## How to run in the terminal:
-    # python -m Susans_Model_Driver start_year start_month length_sim_in_days number_outputs
+    # python -m Susans_Model_Driver start_year start_month start_day length_sim_in_days number_outputs
