@@ -6,7 +6,8 @@ from math import fmod
 import pandas as pd
 import xarray as xr 
 import yaml
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
+import datetime
 from parcels import FieldSet, Field, VectorField, ParticleSet, JITParticle, ParcelsRandom, Variable
 
 sys.path.append('/ocean/gwatts/home/analysis-grace') #Add directory where OP_Kernels is located.
@@ -65,7 +66,7 @@ def filename_set(start,length,varlist=['U','V','W'],local=0):
     define start as: e.g, datetime(2018, 1, 17)
     length= number of days'''
     
-    duration = timedelta(days=length)
+    duration = datetime.timedelta(days=length)
     #Build filenames
     paths = path(local)
     Rlist,Tlist,Ulist, Vlist, Wlist = [], [], [], [], []
@@ -75,16 +76,16 @@ def filename_set(start,length,varlist=['U','V','W'],local=0):
     Biology_list = []
    #
     for day in range(duration.days):
-        path_NEMO = make_prefix(start + timedelta(days=day), paths['NEMO'])
-        path_NEMO_d = make_prefix(start + timedelta(days=day), paths['NEMO'],res='d')
+        path_NEMO = make_prefix(start + datetime.timedelta(days=day), paths['NEMO'])
+        path_NEMO_d = make_prefix(start + datetime.timedelta(days=day), paths['NEMO'],res='d')
         Ulist.append(path_NEMO + '_grid_U.nc')
         Vlist.append(path_NEMO + '_grid_V.nc')
         Wlist.append(path_NEMO + '_grid_W.nc')
         Tlist.append(path_NEMO + '_grid_T.nc')
         Biolist.append(path_NEMO_d + '_prod_T.nc')
         Biology_list.append(path_NEMO + '_biol_T.nc')
-        Waveslist.append(get_WW3_path(start + timedelta(days=day)))
-        Flist.append(get_Fraser_path(start + timedelta(days=day)))
+        Waveslist.append(get_WW3_path(start + datetime.timedelta(days=day)))
+        Flist.append(get_Fraser_path(start + datetime.timedelta(days=day)))
         
 
     # Load NEMO forcing 

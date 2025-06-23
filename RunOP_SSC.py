@@ -123,7 +123,7 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     return field_set, constants
 
     
-def OP_run(year, month, day, sim_length, number_outputs, string):
+def OP_run(year, month, day, sim_length, number_outputs):
 
     # Set-up Run
     (start_time, data_length, duration, delta_t, 
@@ -131,17 +131,17 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
 
     field_set, constants = set_fieldsets_and_constants(start_time, data_length, delta_t)
 
-    outfile_states = name_outfile(year, month, sim_length, string)
+    outfile_states = name_outfile(year, month, sim_length)
 
     # Set-up Ocean Parcels
-    class MPParticle(JITParticle):
-        status = Variable('status', initial=(np.random.rand(number_particles) >
-                                             constants['fraction_colloidal']).astype(int) - 2)
-        vvl_factor = Variable('fact', initial=1)
-        release_time = Variable('release_time', 
-                        initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
+    # class MPParticle(JITParticle):
+    #     status = Variable('status', initial=(np.random.rand(number_particles) >
+    #                                          constants['fraction_colloidal']).astype(int) - 2)
+    #     vvl_factor = Variable('fact', initial=1)
+    #     release_time = Variable('release_time', 
+    #                     initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
     
-    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+    pset_states = ParticleSet(field_set, pclass=JITParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
                           depth=constants['Iona_z']*np.ones(number_particles), 
                               lat = constants['Iona_clat']*np.ones(number_particles))
 
