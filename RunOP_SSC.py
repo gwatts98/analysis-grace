@@ -23,7 +23,7 @@ def timings(year, month, day, sim_length, number_outputs):
     release_particles_every = 86400 # s; change this as needed: currently set to every 24 hours
 
     number_particles = int(min(sim_length, month_days) * 86400 / release_particles_every)
-    print (number_particles)
+    print ('number of particles', number_particles)
 
     output_interval = datetime.timedelta(seconds=sim_length * 86400 / number_outputs)
     print ('output_interval', output_interval)
