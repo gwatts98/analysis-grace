@@ -5,7 +5,7 @@ import numpy as np
 import os
 import sys
 
-from parcels import Field, FieldSet, ParticleSet,Variable, JITParticle
+from parcels import Field, FieldSet, ParticleSet,Variable, JITParticle, AdvectionRK4
 
 sys.path.append('/ocean/gwatts/home/analysis-grace/runs')
 #
@@ -31,10 +31,10 @@ def timings(year, month, day, sim_length, number_outputs):
     return (start_time, data_length, duration, delta_t, release_particles_every, number_particles, output_interval)
 
 
-def name_outfile(year, month, sim_length, string):
+def name_outfile(year, month, sim_length):
     path = '/ocean/gwatts/home/analysis-grace/runs/results'
     print (year, month, sim_length)
-    fn = f'passive_particles_for_01{month}{year}_run_{sim_length}_days_'+string+'.zarr'
+    fn = f'passive_particles_for_01{month}{year}_run_{sim_length}_days_.zarr'
     return os.path.join(path, fn)
 
 
@@ -147,9 +147,10 @@ def OP_run(year, month, day, sim_length, number_outputs):
 
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    KE = (pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
-      + pset_states.Kernel(KeepInOcean)
-     )
+    # KE = (pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
+    #   + pset_states.Kernel(KeepInOcean)
+    #  )
+     
     # KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
     #   + pset_states.Kernel(Advection)
     #   + pset_states.Kernel(turb_mix) + pset_states.Kernel(resuspension) 
@@ -158,7 +159,7 @@ def OP_run(year, month, day, sim_length, number_outputs):
     #  )
 
     # Run!
-    pset_states.execute(KE, runtime=duration, dt=delta_t, output_file=output_file)
+    pset_states.execute(AdvectionRK4, runtime=duration, dt=delta_t, output_file=output_file)
     
 
 if __name__ == "__main__":
