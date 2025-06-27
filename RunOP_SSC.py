@@ -34,7 +34,7 @@ def timings(year, month, day, sim_length, number_outputs):
 def name_outfile(year, month, sim_length):
     path = '/ocean/gwatts/home/analysis-grace/runs/results'
     print (year, month, sim_length)
-    fn = f'passive_particles_for_01{month}{year}_run_{sim_length}_days_.zarr'
+    fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_.zarr'
     return os.path.join(path, fn)
 
 

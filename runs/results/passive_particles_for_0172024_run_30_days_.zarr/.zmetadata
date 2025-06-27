@@ -30,7 +30,7 @@
             "order": "C",
             "shape": [
                 30,
-                30
+                120
             ],
             "zarr_format": 2
         },
@@ -63,7 +63,7 @@
             "order": "C",
             "shape": [
                 30,
-                30
+                120
             ],
             "zarr_format": 2
         },
@@ -94,7 +94,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                30
+                120
             ],
             "zarr_format": 2
         },
@@ -122,7 +122,7 @@
             "order": "C",
             "shape": [
                 30,
-                30
+                120
             ],
             "zarr_format": 2
         },
@@ -181,7 +181,7 @@
             "order": "C",
             "shape": [
                 30,
-                30
+                120
             ],
             "zarr_format": 2
         },
