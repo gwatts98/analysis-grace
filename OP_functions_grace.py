@@ -11,7 +11,7 @@ import datetime
 from parcels import FieldSet, Field, VectorField, ParticleSet, JITParticle, ParcelsRandom, Variable
 
 sys.path.append('/ocean/gwatts/home/analysis-grace') #Add directory where OP_Kernels is located.
-# from PBDEs_OP_Kernels_V2 import * # change between files before running! Just to make sure that you are using the right Kernels :D
+from Kernels import * # change between files before running! Just to make sure that you are using the right Kernels :D
  
 def path(local = 1):
     '''Change with your paths'''

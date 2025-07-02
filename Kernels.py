@@ -2,7 +2,7 @@
 def Advection(particle, fieldset, time):
     #print('Advection kernel is running') 
     # Advection for all PBDEs in status 1, 2 and 3
-    if particle.status == 1 or particle.status == 2 or particle.status == 3: 
+    if particle.status > 0: 
         ssh = fieldset.sossheig[time, particle.depth, particle.lat, particle.lon] #SSH(t) sea surface height
         sshn = fieldset.sossheig[time+particle.dt, particle.depth, particle.lat, particle.lon] #SSH(t+dt) sea surface height in the next time step
         td = fieldset.totaldepth[time, particle.depth, particle.lat, particle.lon]#Total_depth 
@@ -45,7 +45,7 @@ def Advection(particle, fieldset, time):
 #
 #### TURBULENT MIX ####
 def turb_mix(particle,fieldset,time):
-    if particle.status == 1 or particle.status == 2 or particle.status == 3:
+    if particle.status > 0:
         """Vertical mixing"""
         #Vertical mixing
         if particle.depth + 0.5 / particle.fact > td: #Only calculate gradient of diffusion for particles deeper than 0.5 otherwise OP will check for particles outside the domain and remove it.
@@ -79,6 +79,13 @@ def turb_mix(particle,fieldset,time):
         else:
             particle_ddepth += dzs #apply mixing    
 
+
+
+def P_states(particle, fieldset, time):    
+        
+    if (time > particle.release_time):
+        if particle.status < 0:
+            particle.status = - particle.status
 
 
 #

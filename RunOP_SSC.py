@@ -7,16 +7,16 @@ import sys
 
 from parcels import Field, FieldSet, ParticleSet,Variable, JITParticle, AdvectionRK4
 
-sys.path.append('/ocean/gwatts/home/analysis-grace/runs')
+sys.path.append('/ocean/gwatts/home/analysis-grace')
 #
 from OP_functions_grace import *
 #import OP_functions_shared as OP
-#import PBDEs_OP_Kernels_shared as PBDE
+# from Kernels import *
 
 
 def timings(year, month, day, sim_length, number_outputs):
     start_time = datetime.datetime(year, month, day)
-    month_days = 30 # number of days to release particles
+    month_days = sim_length # number of days to release particles
     data_length = max(sim_length, 1)
     duration = datetime.timedelta(days=sim_length)
     delta_t = 5 # s
@@ -31,10 +31,10 @@ def timings(year, month, day, sim_length, number_outputs):
     return (start_time, data_length, duration, delta_t, release_particles_every, number_particles, output_interval)
 
 
-def name_outfile(year, month, sim_length):
-    path = '/ocean/gwatts/home/analysis-grace/runs/results'
+def name_outfile(year, month, sim_length, string):
+    path = '/ocean/gwatts/home/analysis-grace/runs/depDays'
     print (year, month, sim_length)
-    fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_.zarr'
+    fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_'+string+'.zarr'
     return os.path.join(path, fn)
 
 
@@ -122,8 +122,8 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
 
     return field_set, constants
 
-    
-def OP_run(year, month, day, sim_length, number_outputs):
+
+def OP_run(year, month, day, sim_length, number_outputs, string):
 
     # Set-up Run
     (start_time, data_length, duration, delta_t, 
@@ -131,24 +131,29 @@ def OP_run(year, month, day, sim_length, number_outputs):
 
     field_set, constants = set_fieldsets_and_constants(start_time, data_length, delta_t)
 
-    outfile_states = name_outfile(year, month, sim_length)
+    outfile_states = name_outfile(year, month, sim_length, string)
 
     # Set-up Ocean Parcels
-    # class MPParticle(JITParticle):
-    #     status = Variable('status', initial=(np.random.rand(number_particles) >
-    #                                          constants['fraction_colloidal']).astype(int) - 2)
-    #     vvl_factor = Variable('fact', initial=1)
-    #     release_time = Variable('release_time', 
-    #                     initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
+    class MPParticle(JITParticle):
+        # status = Variable('status', initial=(np.random.rand(number_particles) >
+        #                                      constants['fraction_colloidal']).astype(int) - 2)
+        status = Variable('status', initial=-1)
+        vvl_factor = Variable('fact', initial=1)
+        release_time = Variable('release_time', 
+                        initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
     
-    pset_states = ParticleSet(field_set, pclass=JITParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-                          depth=constants['Iona_z']*np.ones(number_particles), 
-                              lat = constants['Iona_clat']*np.ones(number_particles))
+    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+    #                       depth=constants['Iona_z']*np.ones(number_particles), 
+    #                           lat = constants['Iona_clat']*np.ones(number_particles))
+    d = [50., 70., 100., 130., 160.]
+    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+                        depth = np.repeat(d, number_particles/len(d)), lat = constants['Iona_clat']*np.ones(number_particles))
 
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    # KE = (pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
-    #   + pset_states.Kernel(KeepInOcean)
+    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) +  pset_states.Kernel(turb_mix) + pset_states.Kernel(CheckOutOfBounds) 
+        + pset_states.Kernel(KeepInOcean) )
+    #     + pset_states.Kernel(export) 
     #  )
      
     # KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
@@ -159,7 +164,7 @@ def OP_run(year, month, day, sim_length, number_outputs):
     #  )
 
     # Run!
-    pset_states.execute(AdvectionRK4, runtime=duration, dt=delta_t, output_file=output_file)
+    pset_states.execute(KE, runtime=duration, dt=delta_t, output_file=output_file)
     
 
 if __name__ == "__main__":
@@ -170,9 +175,9 @@ if __name__ == "__main__":
     day = int(sys.argv[3])
     sim_length = int(sys.argv[4]) 
     number_outputs = int(sys.argv[5])
-    # name_extension = str(sys.argv[6])
+    name_extension = str(sys.argv[6])
     
-    OP_run(year, month, day, sim_length, number_outputs)
+    OP_run(year, month, day, sim_length, number_outputs, name_extension)
     #
     ## How to run in the terminal:
     # python -m Susans_Model_Driver start_year start_month start_day length_sim_in_days number_outputs
