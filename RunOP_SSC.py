@@ -20,7 +20,7 @@ def timings(year, month, day, sim_length, number_outputs):
     data_length = max(sim_length, 1)
     duration = datetime.timedelta(days=sim_length)
     delta_t = 5 # s
-    release_particles_every = 86400 # s; change this as needed: currently set to every 24 hours
+    release_particles_every = 3600 # s; change this as needed: currently set to every 1 hours
 
     number_particles = int(min(sim_length, month_days) * 86400 / release_particles_every)
     print ('number of particles', number_particles)
@@ -32,7 +32,7 @@ def timings(year, month, day, sim_length, number_outputs):
 
 
 def name_outfile(year, month, sim_length, string):
-    path = '/ocean/gwatts/home/analysis-grace/runs/depDays'
+    path = '/ocean/gwatts/home/analysis-grace/runs/tidal_runs'
     print (year, month, sim_length)
     fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_'+string+'.zarr'
     return os.path.join(path, fn)
@@ -46,7 +46,7 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     # Iona Outfall Location
     constants['Iona_clat'] = [49.195045]
     constants['Iona_clon'] = [-123.301956]
-    constants['Iona_z'] = 70 # m
+    constants['Iona_z'] = 200 # m
     # Iona output sewage vs colloidal
     # constants['fraction_colloidal'] = 0.25 
     
@@ -142,12 +142,14 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
         release_time = Variable('release_time', 
                         initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
     
-    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-    #                       depth=constants['Iona_z']*np.ones(number_particles), 
-    #                           lat = constants['Iona_clat']*np.ones(number_particles))
-    d = [50., 70., 100., 130., 160.]
     pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-                        depth = np.repeat(d, number_particles/len(d)), lat = constants['Iona_clat']*np.ones(number_particles))
+                          depth=constants['Iona_z']*np.ones(number_particles), 
+                              lat = constants['Iona_clat']*np.ones(number_particles))
+    # d = [50., 70., 100., 130., 160.]
+    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+    #                     depth = np.repeat(d, number_particles/len(d)), lat = constants['Iona_clat']*np.ones(number_particles))
+    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+    #                     depth = np.tile(d, int(np.ceil(number_particles / len(d))))[:number_particles], lat = constants['Iona_clat']*np.ones(number_particles))
 
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
@@ -177,7 +179,10 @@ if __name__ == "__main__":
     number_outputs = int(sys.argv[5])
     name_extension = str(sys.argv[6])
     
-    OP_run(year, month, day, sim_length, number_outputs, name_extension)
+    if len(sys.argv) == 7:
+        OP_run(year, month, day, sim_length, number_outputs, name_extension)
+    else: 
+        OP_run(year, month, day, sim_length, number_outputs)
     #
     ## How to run in the terminal:
     # python -m Susans_Model_Driver start_year start_month start_day length_sim_in_days number_outputs
