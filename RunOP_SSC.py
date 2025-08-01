@@ -44,9 +44,9 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     constants = {}
 
     # Iona Outfall Location
-    constants['Iona_clat'] = [49.195045]
-    constants['Iona_clon'] = [-123.301956]
-    constants['Iona_z'] = 200 # m
+    constants['Iona_clat'] = [49.2022]
+    constants['Iona_clon'] = [-123.3722]
+    constants['Iona_z'] = 130 # m
     # Iona output sewage vs colloidal
     # constants['fraction_colloidal'] = 0.25 
     
