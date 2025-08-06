@@ -20,7 +20,7 @@ def timings(year, month, day, sim_length, number_outputs):
     data_length = max(sim_length, 1)
     duration = datetime.timedelta(days=sim_length)
     delta_t = 5 # s
-    release_particles_every = 86400 # s; change this as needed: currently set to every day
+    release_particles_every = 21600 # s; change this as needed: currently set to every 6 hours
     particles_per_group = 500
 
     number_particles = int(min(sim_length, month_days) * 86400 / release_particles_every)
