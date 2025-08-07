@@ -20,8 +20,8 @@ def timings(year, month, day, sim_length, number_outputs):
     data_length = max(sim_length, 1)
     duration = datetime.timedelta(days=sim_length)
     delta_t = 5 # s
-    release_particles_every = 21600 # s; change this as needed: currently set to every 6 hours
-    particles_per_group = 500
+    release_particles_every = 3600 # s; change this as needed: currently set to every 1 hours
+    particles_per_group = 1
 
     number_particles = int(min(sim_length, month_days) * 86400 / release_particles_every)
     total_particles = number_particles * particles_per_group
@@ -36,7 +36,7 @@ def timings(year, month, day, sim_length, number_outputs):
 
 
 def name_outfile(year, month, sim_length, string):
-    path = '/ocean/gwatts/home/analysis-grace/runs/groups'
+    path = '/ocean/gwatts/home/analysis-grace/runs/yearly'
     print (year, month, sim_length)
     fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_'+string+'.zarr'
     return os.path.join(path, fn)
@@ -50,7 +50,7 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     # Iona Outfall Location
     constants['Iona_clat'] = [49.2022]
     constants['Iona_clon'] = [-123.3722]
-    constants['Iona_z'] = 70 # m
+    constants['Iona_z'] = 160 # m
     # constants['DepSize'] = 10 # m
     # Iona output sewage vs colloidal
     # constants['fraction_colloidal'] = 0.25 
