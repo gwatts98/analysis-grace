@@ -36,7 +36,7 @@ def timings(year, month, day, sim_length, number_outputs):
 
 
 def name_outfile(year, month, sim_length, string):
-    path = '/ocean/gwatts/home/analysis-grace/runs/yearly'
+    path = '/ocean/gwatts/home/analysis-grace/runs/config_test'
     print (year, month, sim_length)
     fn = f'passive_particles_for_{day}-{month}-{year}_run_{sim_length}_days_'+string+'.zarr'
     return os.path.join(path, fn)
@@ -164,8 +164,8 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
 
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) +  pset_states.Kernel(turb_mix) + pset_states.Kernel(CheckOutOfBounds) 
-        + pset_states.Kernel(KeepInOcean) )
+    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds) 
+        + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix))
     #     + pset_states.Kernel(export) 
     #  )
      
