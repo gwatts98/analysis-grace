@@ -21,18 +21,18 @@ def timings(year, month, day, sim_length, number_outputs):
     duration = datetime.timedelta(days=sim_length)
     delta_t = 5 # s
     release_particles_every = 3600 # s; change this as needed: currently set to every 1 hours
-    particles_per_group = 1
+    # particles_per_group = 1
 
     number_particles = int(min(sim_length, month_days) * 86400 / release_particles_every)
-    total_particles = number_particles * particles_per_group
-    group_times = np.arange(0, release_particles_every * number_particles, release_particles_every)
+    # total_particles = number_particles * particles_per_group
+    # group_times = np.arange(0, release_particles_every * number_particles, release_particles_every)
 
-    print ('number of particles', total_particles)
+    print ('number of particles', number_particles)
 
     output_interval = datetime.timedelta(seconds=sim_length * 86400 / number_outputs)
     print ('output_interval', output_interval)
     
-    return (start_time, data_length, duration, delta_t, release_particles_every, number_particles, output_interval, group_times, particles_per_group, total_particles)
+    return (start_time, data_length, duration, delta_t, release_particles_every, number_particles, output_interval)
 
 
 def name_outfile(year, month, sim_length, string):
@@ -50,8 +50,8 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     # Iona Outfall Location
     constants['Iona_clat'] = [49.2022] 
     constants['Iona_clon'] = [-123.3722]
-    # constants['Iona_clat'] = [49.2500] # s4-1.5
-    # constants['Iona_clon'] = [-123.6667] # s4-1.5
+    # constants['S4-1.5_clat'] = [49.2500] # s4-1.5
+    # constants['S4-1.5_clon'] = [-123.6667] # s4-1.5
     constants['Iona_z'] = 160 # m
     # constants['DepSize'] = 10 # m
     # Iona output sewage vs colloidal
@@ -134,7 +134,7 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
 
     # Set-up Run
     (start_time, data_length, duration, delta_t, 
-         release_particles_every, number_particles, output_interval, group_times, particles_per_group, total_particles) = timings(year, month, day, sim_length, number_outputs)
+         release_particles_every, number_particles, output_interval) = timings(year, month, day, sim_length, number_outputs)
 
     field_set, constants = set_fieldsets_and_constants(start_time, data_length, delta_t)
 
@@ -146,24 +146,19 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
         #                                      constants['fraction_colloidal']).astype(int) - 2)
         status = Variable('status', initial=-1)
         vvl_factor = Variable('fact', initial=1)
-        # release_time = Variable('release_time', 
-        #                 initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
         release_time = Variable('release_time', 
-                initial=np.repeat(group_times, particles_per_group))
+                        initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
+        # release_time = Variable('release_time', 
+        #         initial=np.repeat(group_times, particles_per_group))
         # size = Variable('size', initial=number_particles)
 
-    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-    #                       depth=constants['Iona_z']*np.ones(number_particles), 
-    #                           lat = constants['Iona_clat']*np.ones(number_particles))
-    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(total_particles), 
-                        depth=constants['Iona_z']*np.ones(total_particles), 
-                            lat = constants['Iona_clat']*np.ones(total_particles))
+    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+                          depth=constants['Iona_z']*np.ones(number_particles), 
+                              lat = constants['Iona_clat']*np.ones(number_particles))
+    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(total_particles), 
+    #                     depth=constants['Iona_z']*np.ones(total_particles), 
+    #                         lat = constants['Iona_clat']*np.ones(total_particles))
    
-    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-    #                     depth = np.repeat(d, number_particles/len(d)), lat = constants['Iona_clat']*np.ones(number_particles))
-    # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
-    #                     depth = np.tile(d, int(np.ceil(number_particles / len(d))))[:number_particles], lat = constants['Iona_clat']*np.ones(number_particles))
-
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
     KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds) 
