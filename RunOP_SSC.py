@@ -50,8 +50,10 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     # Iona Outfall Location
     constants['Iona_clat'] = [49.2022] 
     constants['Iona_clon'] = [-123.3722]
-    # constants['S4-1.5_clat'] = [49.2500] # s4-1.5
-    # constants['S4-1.5_clon'] = [-123.6667] # s4-1.5
+    constants['S4-1.5_clat'] = [49.2500] # s4-1.5
+    constants['S4-1.5_clon'] = [-123.6667] # s4-1.5
+    constants['S4-1_clat'] = [49.2942] # s4-1
+    constants['S4-1_clon'] = [-123.8072] # s4-1
     constants['Iona_z'] = 160 # m
     # constants['DepSize'] = 10 # m
     # Iona output sewage vs colloidal
@@ -152,9 +154,9 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
         #         initial=np.repeat(group_times, particles_per_group))
         # size = Variable('size', initial=number_particles)
 
-    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(number_particles), 
+    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['S4-1_clon']*np.ones(number_particles), 
                           depth=constants['Iona_z']*np.ones(number_particles), 
-                              lat = constants['Iona_clat']*np.ones(number_particles))
+                              lat = constants['S4-1_clat']*np.ones(number_particles))
     # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(total_particles), 
     #                     depth=constants['Iona_z']*np.ones(total_particles), 
     #                         lat = constants['Iona_clat']*np.ones(total_particles))
