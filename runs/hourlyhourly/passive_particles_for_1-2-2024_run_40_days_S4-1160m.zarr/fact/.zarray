@@ -17,7 +17,7 @@
     "order": "C",
     "shape": [
         960,
-        959
+        960
     ],
     "zarr_format": 2
 }
