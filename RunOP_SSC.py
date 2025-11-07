@@ -54,6 +54,8 @@ def set_fieldsets_and_constants(start_time, data_length, delta_t):
     constants['S4-1.5_clon'] = [-123.6667] # s4-1.5
     constants['S4-1_clat'] = [49.2942] # s4-1
     constants['S4-1_clon'] = [-123.8072] # s4-1
+    constants['NG_clat'] = [49.7267] # NG is north SoG, near north west tip of Texeda
+    constants['NG_clon'] = [-124.6800] # 
     constants['Iona_z'] = 160 # m
     # constants['DepSize'] = 10 # m
     # Iona output sewage vs colloidal
