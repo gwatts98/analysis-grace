@@ -30,7 +30,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -62,7 +62,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -95,7 +95,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -126,7 +126,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -154,7 +154,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -186,7 +186,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -218,7 +218,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },
@@ -277,7 +277,7 @@
             "order": "C",
             "shape": [
                 960,
-                856
+                960
             ],
             "zarr_format": 2
         },

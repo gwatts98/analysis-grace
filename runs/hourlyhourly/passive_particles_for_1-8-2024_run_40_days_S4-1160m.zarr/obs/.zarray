@@ -15,7 +15,7 @@
     "filters": null,
     "order": "C",
     "shape": [
-        856
+        960
     ],
     "zarr_format": 2
 }
