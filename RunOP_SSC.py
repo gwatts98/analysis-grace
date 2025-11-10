@@ -156,9 +156,9 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
         #         initial=np.repeat(group_times, particles_per_group))
         # size = Variable('size', initial=number_particles)
 
-    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['S4-1_clon']*np.ones(number_particles), 
+    pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['NG_clon']*np.ones(number_particles), 
                           depth=constants['Iona_z']*np.ones(number_particles), 
-                              lat = constants['S4-1_clat']*np.ones(number_particles))
+                              lat = constants['NG_clat']*np.ones(number_particles))
     # pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['Iona_clon']*np.ones(total_particles), 
     #                     depth=constants['Iona_z']*np.ones(total_particles), 
     #                         lat = constants['Iona_clat']*np.ones(total_particles))
