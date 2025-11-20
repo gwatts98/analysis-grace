@@ -103,4 +103,21 @@ def KeepInOcean(particle, fieldset, time):
     if particle.state == StatusCode.ErrorThroughSurface:
         particle.depth = 0.0
         particle.state = StatusCode.Success  
+
+
+def FreezeParticle(particle, fieldset, time):
+    if particle.state == StatusCode.FieldOutOfBoundError:   
+        particle.dlon = 0.0
+        particle.dlat = 0.0
+
+def StayInDomain(particle, fieldset, time):
+    lonmin = fieldset.UVW[particle.lon[0]]
+    lonmax = fieldset.UVW[particle.lon[-1]]
+    latmin = fieldset.UVW[particle.lat[0]]
+    latmax = fieldset.UVW[particle.lat[-1]]
+
+    if (particle.lon <= lonmin or particle.lon >= lonmax or
+        particle.lat <= latmin or particle.lat >= latmax):
+        particle.dlon = 0
+        particle.dlat = 0
         
