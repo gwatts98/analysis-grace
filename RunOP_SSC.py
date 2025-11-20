@@ -165,10 +165,11 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
    
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds) 
-        + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix) + pset_states.Kernel(export))
+    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds)
+        + pset_states.Kernel(StayInDomain) + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix) + pset_states.Kernel(export))
     #     + pset_states.Kernel(export) 
     #  )
+    # recov = pset_states.Kernel(CheckOutOfBounds)
      
     # KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
     #   + pset_states.Kernel(Advection)
