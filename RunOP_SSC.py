@@ -146,15 +146,14 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
 
     # Set-up Ocean Parcels
     class MPParticle(JITParticle):
-        # status = Variable('status', initial=(np.random.rand(number_particles) >
-        #                                      constants['fraction_colloidal']).astype(int) - 2)
         status = Variable('status', initial=-1)
         vvl_factor = Variable('fact', initial=1)
         release_time = Variable('release_time', 
                         initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
-        # release_time = Variable('release_time', 
-        #         initial=np.repeat(group_times, particles_per_group))
-        # size = Variable('size', initial=number_particles)
+        
+         dlon = Variable('dlon', dtype=np.float32, initial=0.0)
+         dlat = Variable('dlat', dtype=np.float32, initial=0.0)
+
 
     pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['NG_clon']*np.ones(number_particles), 
                           depth=constants['Iona_z']*np.ones(number_particles), 
@@ -166,17 +165,7 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
     KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds)
-        + pset_states.Kernel(StayInDomain) + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix) + pset_states.Kernel(export))
-    #     + pset_states.Kernel(export) 
-    #  )
-    # recov = pset_states.Kernel(CheckOutOfBounds)
-     
-    # KE = (pset_states.Kernel(PBDEs_states) + pset_states.Kernel(Sinking) 
-    #   + pset_states.Kernel(Advection)
-    #   + pset_states.Kernel(turb_mix) + pset_states.Kernel(resuspension) 
-    #   + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export) 
-    #   + pset_states.Kernel(KeepInOcean)
-    #  )
+        + pset_states.Kernel(FreezeParticle) + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix) + pset_states.Kernel(export))
 
     # Run!
     pset_states.execute(KE, runtime=duration, dt=delta_t, output_file=output_file)
