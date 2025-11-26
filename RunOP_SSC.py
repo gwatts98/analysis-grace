@@ -151,8 +151,8 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
         release_time = Variable('release_time', 
                         initial=np.arange(0, release_particles_every*number_particles, release_particles_every))
         
-         dlon = Variable('dlon', dtype=np.float32, initial=0.0)
-         dlat = Variable('dlat', dtype=np.float32, initial=0.0)
+        # dlon = Variable('dlon', dtype=np.float32, initial=0.0)
+        # dlat = Variable('dlat', dtype=np.float32, initial=0.0)
 
 
     pset_states = ParticleSet(field_set, pclass=MPParticle, lon=constants['NG_clon']*np.ones(number_particles), 
@@ -164,8 +164,9 @@ def OP_run(year, month, day, sim_length, number_outputs, string):
    
     output_file = pset_states.ParticleFile(name=outfile_states, outputdt=output_interval)
     
-    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(CheckOutOfBounds)
-        + pset_states.Kernel(FreezeParticle) + pset_states.Kernel(KeepInOcean) + pset_states.Kernel(turb_mix) + pset_states.Kernel(export))
+    KE = (pset_states.Kernel(P_states) + pset_states.Kernel(Advection) + pset_states.Kernel(turb_mix) 
+        + pset_states.Kernel(CheckOutOfBounds) + pset_states.Kernel(export)
+        + pset_states.Kernel(KeepInOcean))
 
     # Run!
     pset_states.execute(KE, runtime=duration, dt=delta_t, output_file=output_file)
