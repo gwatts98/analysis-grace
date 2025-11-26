@@ -105,19 +105,24 @@ def KeepInOcean(particle, fieldset, time):
         particle.state = StatusCode.Success  
 
 
-def FreezeParticle(particle, fieldset, time):
-    if particle.state == StatusCode.FieldOutOfBoundError:   
-        particle.dlon = 0.0
-        particle.dlat = 0.0
+# def FreezeParticle(particle, fieldset, time):
+#     (uus, vvs, wws) = fieldset.UVW[time, particle.depth, particle.lat, particle.lon]
+#     if particle.lat + particle_dlat > max(particle.lat) or particle.lat + particle_dlat < min(particle.lat) :   
+#         particle_dlon = 0.0
+#         particle_dlat = 0.0
+#     elif particle.lon + particle_dlon > max(particle.lon) or particle.lon + particle_dlon < min(particle.lon) :   
+#         particle_dlon = 0.0
+#         particle_dlat = 0.0
 
-def StayInDomain(particle, fieldset, time):
-    lonmin = fieldset.UVW[particle.lon[0]]
-    lonmax = fieldset.UVW[particle.lon[-1]]
-    latmin = fieldset.UVW[particle.lat[0]]
-    latmax = fieldset.UVW[particle.lat[-1]]
 
-    if (particle.lon <= lonmin or particle.lon >= lonmax or
-        particle.lat <= latmin or particle.lat >= latmax):
-        particle.dlon = 0
-        particle.dlat = 0
+# def StayInDomain(particle, fieldset, time):
+#     lonmin = fieldset.UVW[particle.lon[0]]
+#     lonmax = fieldset.UVW[particle.lon[-1]]
+#     latmin = fieldset.UVW[particle.lat[0]]
+#     latmax = fieldset.UVW[particle.lat[-1]]
+
+#     if (particle.lon <= lonmin or particle.lon >= lonmax or
+#         particle.lat <= latmin or particle.lat >= latmax):
+#         particle.dlon = 0
+#         particle.dlat = 0
         
